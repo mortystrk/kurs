@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">HelpMe</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="add_avatar">Добавьте аватар</string>
+    <string name="edittext_user_name">Имя</string>
+    <string name="edittext_user_age">Возраст(не обязательно)</string>
+    <string name="go_homepage_buttun_text">Вперед</string>
+    <string name="go_signIn_page_button_text">Назад</string>
+</resources>

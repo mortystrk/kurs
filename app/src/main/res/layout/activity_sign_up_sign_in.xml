@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="mrtsk.by.helpme.SignUpSignInActivity">
+
+    <ProgressBar
+        android:id="@+id/sign_up_in_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/sign_up_sign_in_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="179dp"
+            android:id="@+id/tilLogin">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/et_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/login" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tilLogin"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:id="@+id/tilPassword">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password"
+                android:inputType="textPassword" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/sign_up"
+            android:layout_width="109dp"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/tilPassword"
+            android:layout_below="@+id/tilPassword"
+            android:layout_marginTop="42dp"
+            android:background="@drawable/round_button"
+            android:textAllCaps="false"
+            android:text="Регистрация" />
+
+        <Button
+            android:id="@+id/sign_in"
+            android:layout_width="109dp"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/tilPassword"
+            android:layout_alignTop="@+id/sign_up"
+            android:background="@drawable/round_button"
+            android:text="Вход"
+            android:textAllCaps="false" />
+    </RelativeLayout>
+</RelativeLayout>
