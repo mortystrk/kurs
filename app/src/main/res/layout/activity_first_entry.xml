@@ -4,17 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/first_entry_view"
     tools:context="mrtsk.by.helpme.FirstEntry">
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/profile_image"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:layout_below="@+id/textInputLayout2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="95dp"
         android:src="@mipmap/human_avatar"
-        app:civ_border_color="#FF000000"
+        app:civ_border_color="@android:color/black"
         app:civ_border_width="2dp" />
 
     <android.support.design.widget.TextInputLayout
