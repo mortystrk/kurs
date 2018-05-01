@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/feed_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    tools:context="mrtsk.by.helpme.FeedActivity">
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="55dp"
+        android:id="@+id/textInputLayout3">
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/keyword_search" />
+    </android.support.design.widget.TextInputLayout>
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textInputLayout3"
+        android:layout_toEndOf="@+id/textInputLayout3"
+        android:background="@color/sb__transparent"
+        app:srcCompat="@android:drawable/ic_search_category_default"
+        android:contentDescription="@string/search_description_button" />
+
+    <ListView
+        android:id="@+id/feed_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textInputLayout3"
+        tools:listitem="@layout/feed_item" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floating_home"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/imageButton"
+        android:background="@android:color/background_light"
+        android:layout_marginBottom="10dp"
+        android:clickable="true"
+        android:translationZ="2dp"
+        app:backgroundTint="@android:color/background_light"
+        app:elevation="1dp"
+        app:srcCompat="@mipmap/home_page" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floating_pencil"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/textInputLayout3"
+        android:background="@android:color/background_light"
+        android:clickable="true"
+        android:translationZ="2dp"
+        app:backgroundTint="@android:color/background_light"
+        app:elevation="1dp"
+        app:srcCompat="@mipmap/add_post" />
+
+</RelativeLayout>

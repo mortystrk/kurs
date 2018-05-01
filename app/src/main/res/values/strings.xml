@@ -21,4 +21,6 @@
     <string name="edittext_user_age">Возраст(не обязательно)</string>
     <string name="go_homepage_buttun_text">Вперед</string>
     <string name="go_signIn_page_button_text">Назад</string>
+    <string name="keyword_search">Поиск по ключевому слову</string>
+    <string name="search_description_button">Search</string>
 </resources>

@@ -16,6 +16,7 @@ import mrtsk.by.helpme.callbacks.SignInCallback
 import mrtsk.by.helpme.callbacks.SignUpCallback
 import mrtsk.by.helpme.responses.SignInResponse
 import mrtsk.by.helpme.responses.SignUpResponse
+import mrtsk.by.helpme.util.AppPreferences
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -25,10 +26,14 @@ class SignUpSignInActivity : AppCompatActivity() {
     private val SERVER_ADDRESS = "http://192.168.43.20:3333"
     private var mSignUpRequest: SignUpRequest? = null
     private var mSignInRequest: SignInRequest? = null
+    private lateinit var preferences: AppPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up_sign_in)
+
+        preferences = AppPreferences(this)
+        preferences.setServerAddress(SERVER_ADDRESS)
 
         sign_up.setOnClickListener { attemptSignUp() }
         sign_in.setOnClickListener { attemptSignIn() }
@@ -103,6 +108,7 @@ class SignUpSignInActivity : AppCompatActivity() {
                     true
                 }
             } catch (e: Exception) {
+                signUpResponse = SignUpResponse("bad response", null, null)
                 false
             }
         }
@@ -112,11 +118,11 @@ class SignUpSignInActivity : AppCompatActivity() {
             showProgress(false)
 
             if (result) {
-                signUpCallback.finish(signUpResponse!!) // ok
-            } else if (!result && signUpResponse!!.isBusy == null) {
+                signUpCallback.finish(signUpResponse) // ok
+            } else if (!result && signUpResponse.isBusy == null) {
                 signUpCallback.finish(null) // ошибка сети и т.п.
             } else {
-                signUpCallback.finish(signUpResponse!!) // логин занят
+                signUpCallback.finish(signUpResponse) // логин занят
             }
         }
 
@@ -124,7 +130,6 @@ class SignUpSignInActivity : AppCompatActivity() {
             mSignUpRequest = null
             showProgress(false)
         }
-
     }
 
     private fun buildSignInBody(login: String, password: String) : FormBody {
@@ -207,7 +212,7 @@ class SignUpSignInActivity : AppCompatActivity() {
                         }
                     } else {
                         val snackbar = SnackBar.Builder(this@SignUpSignInActivity)
-                                .withMessage("Что-то пошло не так. Повторите попытку позже")
+                                .withMessage("Что-то пошло не так. Проверьте интернет-соединение")
                                 .show()
                     }
                 }
@@ -264,12 +269,12 @@ class SignUpSignInActivity : AppCompatActivity() {
                                     .show()
                         } else if (signInResponse.firstEntry == "true") {
                             val intent = Intent(this@SignUpSignInActivity, FirstEntry::class.java)
-                            intent.putExtra("id", signInResponse.id)
+                            preferences.setUserId(signInResponse.id)
 
                             startActivity(intent)
                         } else {
-                            val intent = Intent(this@SignUpSignInActivity, MainActivity::class.java)
-                            intent.putExtra("id", signInResponse.id)
+                            val intent = Intent(this@SignUpSignInActivity, FeedActivity::class.java)
+                            preferences.setUserId(signInResponse.id)
 
                             startActivity(intent)
                         }
