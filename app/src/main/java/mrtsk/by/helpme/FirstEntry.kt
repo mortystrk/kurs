@@ -32,6 +32,7 @@ class FirstEntry : AppCompatActivity() {
     private val SELECT_PHOTO = 123
     private var mUploadUserData: UploadUserData? = null
     private lateinit var preferences: AppPreferences
+    private var countOfBackPress = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,11 +45,23 @@ class FirstEntry : AppCompatActivity() {
         }
 
         back_to_signIn_page.setOnClickListener {
-            val intent = Intent(this, SignUpSignInActivity::class.java)
-            startActivity(intent)
+            if (countOfBackPress == 0) {
+                Snackbar.make(
+                        first_entry_view,
+                        "Если вы вернетесь назад, то данные придется вводить данные заново.",
+                        Snackbar.LENGTH_LONG
+                ).show()
+                countOfBackPress++
+                return@setOnClickListener
+            } else {
+                preferences.setUserId("")
+                countOfBackPress--
+                val intent = Intent(this, SignUpSignInActivity::class.java)
+                startActivity(intent)
+            }
         }
 
-        go_to_homepage.setOnClickListener {
+        go_to_feed_list.setOnClickListener {
             uploadUserDataToServer()
         }
 
@@ -92,7 +105,7 @@ class FirstEntry : AppCompatActivity() {
 
                 jsonAdapter.fromJson(response.body().string())!!
             } catch (e: Exception) {
-                SimpleResponse("network error")
+                SimpleResponse("network error", null)
             }
         }
 

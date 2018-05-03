@@ -7,7 +7,7 @@ class PostsList(private var posts: ArrayList<Post>) {
     }
 
     fun addPost(newPost: Post) {
-        posts.add(newPost)
+        posts.add(0, newPost)
     }
 
     fun getAllPosts() : ArrayList<Post> {

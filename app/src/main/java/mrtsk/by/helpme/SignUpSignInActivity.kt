@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
-import android.widget.Toast
 import com.github.mrengineer13.snackbar.SnackBar
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -44,7 +43,7 @@ class SignUpSignInActivity : AppCompatActivity() {
         private var exception = false
 
         override fun doInBackground(vararg params: String?) {
-            val url = SERVER_ADDRESS + "/signin"
+            val url = SERVER_ADDRESS + "/sign/in"
             val login = params[0]
             val password = params[1]
 
@@ -84,7 +83,7 @@ class SignUpSignInActivity : AppCompatActivity() {
         private lateinit var signUpResponse: SignUpResponse
 
         override fun doInBackground(vararg params: String?): Boolean {
-            val url = SERVER_ADDRESS + "/registration"
+            val url = SERVER_ADDRESS + "/sign/up"
             val login = params[0]
             val password = params[1]
 
@@ -100,15 +99,15 @@ class SignUpSignInActivity : AppCompatActivity() {
 
                 signUpResponse = jsonAdapter.fromJson(response.body().string())!!
 
-                if (signUpResponse!!.response == "login is already taken") {
-                    signUpResponse!!.isBusy = true
+                if (signUpResponse.error == "login is already taken") {
+                    signUpResponse.isBusy = true
                     false
                 } else {
-                    signUpResponse!!.isBusy = false
+                    signUpResponse.isBusy = false
                     true
                 }
             } catch (e: Exception) {
-                signUpResponse = SignUpResponse("bad response", null, null)
+                signUpResponse = SignUpResponse("bad error", null, null)
                 false
             }
         }
@@ -133,7 +132,7 @@ class SignUpSignInActivity : AppCompatActivity() {
     }
 
     private fun buildSignInBody(login: String, password: String) : FormBody {
-        val id = SHA256(login)
+        val id = preferences.getUserId()
 
         return FormBody.Builder()
                 .add("userId", id)
@@ -203,6 +202,7 @@ class SignUpSignInActivity : AppCompatActivity() {
                             val snackbar = SnackBar.Builder(this@SignUpSignInActivity)
                                     .withMessage("Регистрация прошла успешно")
                                     .show()
+                            //preferences.setUserId(signUpResponse._id!!)
                         } else {
                             val snackbar = SnackBar.Builder(this@SignUpSignInActivity)
                                     .withMessage("Такой логин уже занят")
@@ -263,20 +263,24 @@ class SignUpSignInActivity : AppCompatActivity() {
                             val snackbar = SnackBar.Builder(this@SignUpSignInActivity)
                                     .withMessage("Такого пользователя не существует")
                                     .show()
-                        } else if (!signInResponse.isCorrectPassword) {
+                        } else if (!signInResponse.isPasswordCorrect) {
                             val snackbar = SnackBar.Builder(this@SignUpSignInActivity)
                                     .withMessage("Неверный пароль")
                                     .show()
-                        } else if (signInResponse.firstEntry == "true") {
+                        } else if (signInResponse.isFirst == "true") {
                             val intent = Intent(this@SignUpSignInActivity, FirstEntry::class.java)
-                            preferences.setUserId(signInResponse.id)
-
-                            startActivity(intent)
+                            //preferences.setUserId(signInResponse._id)
+                            val snackbar = SnackBar.Builder(this@SignUpSignInActivity)
+                                    .withMessage("Первый вход")
+                                    .show()
+                            //startActivity(intent)
                         } else {
                             val intent = Intent(this@SignUpSignInActivity, FeedActivity::class.java)
-                            preferences.setUserId(signInResponse.id)
-
-                            startActivity(intent)
+                            //preferences.setUserId(signInResponse._id)
+                            val snackbar = SnackBar.Builder(this@SignUpSignInActivity)
+                                    .withMessage("Не первый вход")
+                                    .show()
+                            //startActivity(intent)
                         }
                     } else {
                         val snackbar = SnackBar.Builder(this@SignUpSignInActivity)

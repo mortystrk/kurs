@@ -36,15 +36,25 @@ class AppPreferences(context: Context) {
     private val PREFERENCE_SERVER_ADDRESS = "ServerAddress"
     private val PREFERENCE_USER_AVATAR = "UserAvatar"
     private val PREFERENCE_USER_NAME = "UserName"
-    private val PREFERENE_POST_RATING = "PostRating"
-    private val PREFERENE_USER_RATING = "UserRating"
+    private val PREFERENCE_POST_RATING = "PostRating"
+    private val PREFERENCE_USER_RATING = "UserRating"
     private val PREFERENCE_USER_AGE = "UserAge"
+    private val PREFERENCE_IS_NEW_USER = "isNewUser"
+    private val PREFERENCE_POST_DESCRIPTION = "PostDescription"
+    private val PREFERENCE_POST_TEXT = "PostText"
+    private val PREFERENCE_POST_ID = "PostId"
 
     private val preference = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
 
     fun setUserId(id: String) {
         val editor = preference.edit()
         editor.putString(PREFERENCE_USER_ID, id)
+        editor.apply()
+    }
+
+    fun setPostId(id: Int) {
+        val editor = preference.edit()
+        editor.putInt(PREFERENCE_POST_ID, id)
         editor.apply()
     }
 
@@ -56,13 +66,13 @@ class AppPreferences(context: Context) {
 
     fun setPostRating(rating: Float) {
         val editor = preference.edit()
-        editor.putFloat(PREFERENE_POST_RATING, rating)
+        editor.putFloat(PREFERENCE_POST_RATING, rating)
         editor.apply()
     }
 
     fun setUserRating(rating: Double) {
         val editor = preference.edit()
-        editor.putFloat(PREFERENE_POST_RATING, rating.toFloat())
+        editor.putFloat(PREFERENCE_POST_RATING, rating.toFloat())
         editor.apply()
     }
 
@@ -84,12 +94,34 @@ class AppPreferences(context: Context) {
         editor.apply()
     }
 
+    fun setNewPost(flag: Boolean) {
+        val editor = preference.edit()
+        editor.putBoolean(PREFERENCE_IS_NEW_USER, flag)
+        editor.apply()
+    }
+
+    fun setPostText(text: String) {
+        val editor = preference.edit()
+        editor.putString(PREFERENCE_POST_TEXT, text)
+        editor.apply()
+    }
+
+    fun setPostDescription(description: String) {
+        val editor = preference.edit()
+        editor.putString(PREFERENCE_POST_DESCRIPTION, description)
+        editor.apply()
+    }
+
     fun getUserAge() : String {
         return preference.getString(PREFERENCE_USER_AGE, "-1")
     }
 
     fun getUserId() : String {
         return preference.getString(PREFERENCE_USER_ID, "undefined")
+    }
+
+    fun getPostId() : Int {
+        return preference.getInt(PREFERENCE_POST_ID, -1)
     }
 
     fun getServerAddress() : String {
@@ -104,10 +136,22 @@ class AppPreferences(context: Context) {
         return preference.getString(PREFERENCE_USER_NAME, "undefined")
     }
     fun getPostRating() : Float {
-        return preference.getFloat(PREFERENE_POST_RATING, 0f)
+        return preference.getFloat(PREFERENCE_POST_RATING, 0f)
     }
 
     fun getUserRating() : Float {
-        return preference.getFloat(PREFERENE_USER_RATING, 0f)
+        return preference.getFloat(PREFERENCE_USER_RATING, 0f)
+    }
+
+    fun getPostText() : String {
+        return preference.getString(PREFERENCE_POST_TEXT, "")
+    }
+
+    fun getPostDescription() : String {
+        return preference.getString(PREFERENCE_POST_DESCRIPTION, "")
+    }
+
+    fun isNewPost() : Boolean {
+        return preference.getBoolean(PREFERENCE_IS_NEW_USER, false)
     }
 }

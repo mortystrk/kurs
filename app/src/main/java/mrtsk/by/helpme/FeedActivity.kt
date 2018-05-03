@@ -33,6 +33,7 @@ class FeedActivity : AppCompatActivity() {
     private var mDownloadUserData: DownloadUserData? = null
     private var mDownloadAllPosts: DownloadAllPosts? = null
     private lateinit var posts: PostsList
+    private lateinit var adapter: PostListViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,9 +54,9 @@ class FeedActivity : AppCompatActivity() {
                     preferences.setUserName(user.name)
                     if (user.age != null) {
                         preferences.setAge(user.age!!)
-                        preferences.setUserRating(user.rating!!)
+                        preferences.setUserRating(user.userRating!!)
                     } else {
-                        preferences.setUserRating(user.rating!!)
+                        preferences.setUserRating(user.userRating!!)
                     }
                 } else {
                     Snackbar.make(
@@ -69,7 +70,7 @@ class FeedActivity : AppCompatActivity() {
                     override fun finish(posts: List<Post>?) {
                         if (posts != null) {
                             this@FeedActivity.posts = PostsList(posts as ArrayList<Post>)
-                            val adapter = PostListViewAdapter(this@FeedActivity.posts)
+                            adapter = PostListViewAdapter(this@FeedActivity.posts)
                             feed_list_view.adapter = adapter
                         } else {
                             Snackbar.make(
@@ -84,6 +85,19 @@ class FeedActivity : AppCompatActivity() {
             }
         })
         mDownloadUserData!!.execute()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (preferences.isNewPost()) {
+            val newPost = Post(preferences.getPostId(), preferences.getAvatar(), preferences.getName(),
+                    preferences.getUserId(), preferences.getPostRating(), preferences.getUserRating(),
+                    preferences.getPostDescription(), preferences.getPostText())
+
+            posts.addPost(newPost)
+            adapter.notifyDataSetChanged()
+            preferences.setNewPost(false)
+        }
     }
 
     inner class PostListViewAdapter(private var postsList: PostsList) : BaseAdapter() {
@@ -147,7 +161,7 @@ class FeedActivity : AppCompatActivity() {
         private var user: User? = null
 
         override fun doInBackground(vararg params: Unit?) {
-            val url = preferences.getServerAddress() + "/get/mainpage?id=${preferences.getUserId()}"
+            val url = preferences.getServerAddress() + "/get/mainpage?_id=${preferences.getUserId()}"
 
             val request = Request.Builder()
                     .url(url)
@@ -184,10 +198,6 @@ class FeedActivity : AppCompatActivity() {
                     .url(url)
                     .build()
 
-            /*val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-            val type = Types.newParameterizedType(ArrayList::class.java, Post::class.java)
-            val jsonAdapter: JsonAdapter<ArrayList<Post>> = moshi.adapter(type)*/
-
             val client = OkHttpClient()
             val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
             val type = Types.newParameterizedType(List::class.java, Post::class.java)
@@ -215,5 +225,10 @@ class FeedActivity : AppCompatActivity() {
         override fun onPostExecute(result: Unit?) {
             downloadPostsCallback.finish(posts)
         }
+    }
+
+    private fun showProgress(show: Boolean) {
+        feed_download_progress.visibility = if (show) View.VISIBLE else View.GONE
+        feed_list_view.alpha = if (show) 0.25f else 1f
     }
 }

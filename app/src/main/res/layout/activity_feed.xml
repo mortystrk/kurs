@@ -9,6 +9,15 @@
     android:focusableInTouchMode="true"
     tools:context="mrtsk.by.helpme.FeedActivity">
 
+    <ProgressBar
+        android:id="@+id/feed_download_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone" />
+
     <android.support.design.widget.TextInputLayout
         android:layout_width="250dp"
         android:layout_height="wrap_content"

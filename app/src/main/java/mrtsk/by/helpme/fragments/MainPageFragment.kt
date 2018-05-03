@@ -38,9 +38,9 @@ class MainPageFragment: Fragment() {
                     user_main_page_name.text = user.name
                     if (user.age != null) {
                         user_main_page_age.text = "Возраст: ${user.age.toString()}"
-                        user_main_page_rating.text = "Рейтинг: ${user.rating.toString()}"
+                        user_main_page_rating.text = "Рейтинг: ${user.userRating.toString()}"
                     } else {
-                        user_main_page_age.text = "Рейтинг: ${user.rating.toString()}"
+                        user_main_page_age.text = "Рейтинг: ${user.userRating.toString()}"
                     }
                 } else {
                     Snackbar.make(
@@ -62,7 +62,7 @@ class MainPageFragment: Fragment() {
         private var user: User? = null
 
         override fun doInBackground(vararg params: Unit?) {
-            val url = SERVER_ADDRESS + "/get/mainpage?id=$id"
+            val url = SERVER_ADDRESS + "/get/mainpage?_id=$id"
 
             val request = Request.Builder()
                     .url(url)
@@ -90,7 +90,7 @@ class MainPageFragment: Fragment() {
     }
 
     companion object {
-        private val USER_ID = "id"
+        private val USER_ID = "_id"
 
         fun newInstance(param: String) : MainPageFragment {
             val fragment = MainPageFragment()

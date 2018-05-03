@@ -57,6 +57,11 @@ class AddPostActivity : AppCompatActivity() {
                     override fun finish(simpleResponse: SimpleResponse) {
                         when (simpleResponse.text) {
                             "successfully" -> {
+                                preferences!!.setNewPost(true)
+                                preferences!!.setPostDescription(description)
+                                preferences!!.setPostText(text)
+                                preferences!!.setPostId(simpleResponse.postId!!.toInt())
+
                                 Snackbar.make(
                                         add_post_layout,
                                         "Успешный постинг!",
@@ -122,7 +127,7 @@ class AddPostActivity : AppCompatActivity() {
                 val response = client.newCall(request).execute()
                 jsonAdapter.fromJson(response.body().string())!!
             } catch (e: Exception) {
-                SimpleResponse("network error")
+                SimpleResponse("network error", null)
             }
         }
 
@@ -171,7 +176,7 @@ class AddPostActivity : AppCompatActivity() {
     }
 
     private fun validationPostText(text: String): Boolean {
-        return text.length > 60
+        return text.length > 30
     }
 
     private fun showProgress(show: Boolean) {
