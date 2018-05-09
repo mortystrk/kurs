@@ -18,9 +18,12 @@
     <string name="password">Пароль</string>
     <string name="add_avatar">Добавьте аватар</string>
     <string name="edittext_user_name">Имя</string>
-    <string name="edittext_user_age">Возраст(не обязательно)</string>
+    <string name="edittext_user_age">Возраст</string>
     <string name="go_homepage_buttun_text">Вперед</string>
     <string name="go_signIn_page_button_text">Назад</string>
     <string name="keyword_search">Поиск по ключевому слову</string>
     <string name="search_description_button">Search</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

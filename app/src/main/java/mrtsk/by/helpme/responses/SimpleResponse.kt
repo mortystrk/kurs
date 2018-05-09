@@ -1,3 +1,3 @@
 package mrtsk.by.helpme.responses
 
-data class SimpleResponse(val text: String, val postId: Int?)
+data class SimpleResponse(val error: String, val postId: Int?)

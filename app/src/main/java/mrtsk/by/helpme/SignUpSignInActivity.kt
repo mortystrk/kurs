@@ -269,18 +269,18 @@ class SignUpSignInActivity : AppCompatActivity() {
                                     .show()
                         } else if (signInResponse.isFirst == "true") {
                             val intent = Intent(this@SignUpSignInActivity, FirstEntry::class.java)
-                            //preferences.setUserId(signInResponse._id)
-                            val snackbar = SnackBar.Builder(this@SignUpSignInActivity)
+                            preferences.setUserId(signInResponse._id)
+                            /*val snackbar = SnackBar.Builder(this@SignUpSignInActivity)
                                     .withMessage("Первый вход")
-                                    .show()
-                            //startActivity(intent)
+                                    .show()*/
+                            startActivity(intent)
                         } else {
                             val intent = Intent(this@SignUpSignInActivity, FeedActivity::class.java)
-                            //preferences.setUserId(signInResponse._id)
-                            val snackbar = SnackBar.Builder(this@SignUpSignInActivity)
+                            preferences.setUserId(signInResponse._id)
+                            /*val snackbar = SnackBar.Builder(this@SignUpSignInActivity)
                                     .withMessage("Не первый вход")
-                                    .show()
-                            //startActivity(intent)
+                                    .show()*/
+                            startActivity(intent)
                         }
                     } else {
                         val snackbar = SnackBar.Builder(this@SignUpSignInActivity)

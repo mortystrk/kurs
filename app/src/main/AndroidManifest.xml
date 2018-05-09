@@ -29,12 +29,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".FirstEntry" />
-        <activity android:name=".FeedActivity"></activity>
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".AddPostActivity" />
-        <activity android:name=".mongooseModel.MongooseTest">
+        <activity android:name=".FeedActivity" />
+        <activity android:name=".HomeActivity" >
 
         </activity>
+        <activity android:name=".AddPostActivity" />
+        <activity android:name=".mongooseModel.MongooseTest" />
+        <activity android:name=".MeetingDetail"></activity>
     </application>
 
 </manifest>

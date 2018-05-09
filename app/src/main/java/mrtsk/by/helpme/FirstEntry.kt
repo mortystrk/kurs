@@ -56,6 +56,7 @@ class FirstEntry : AppCompatActivity() {
             } else {
                 preferences.setUserId("")
                 countOfBackPress--
+                preferences.setUserId("")
                 val intent = Intent(this, SignUpSignInActivity::class.java)
                 startActivity(intent)
             }
@@ -70,26 +71,19 @@ class FirstEntry : AppCompatActivity() {
     inner class UploadUserData(private val simpleCallback: SimpleCallback) : AsyncTask<User, Unit, Unit>() {
         private lateinit var simpleResponse: SimpleResponse
 
-        override fun doInBackground(vararg params: User?) {
-            val url = SERVER_ADDRESS + "/signin/first"
+        override fun doInBackground(vararg params: User) {
+            val url = SERVER_ADDRESS + "/create/user"
             val user = params[0]
             preferences.setUserRating(100.0)
 
-            val body = if (user!!.age != null) {
-                FormBody.Builder()
-                        .add("userId", preferences.getUserId())
-                        .add("userName", user.name)
-                        .add("userAge", user.age.toString())
-                        .add("userAvatar", user.image)
-                        .add("userRating", preferences.getUserRating().toString())
-                        .build()
-            } else {
-                FormBody.Builder()
-                        .add("userId", preferences.getUserId())
-                        .add("userName", user.name)
-                        .add("userAvatar", user.image)
-                        .build()
-            }
+            val body = FormBody.Builder()
+                    .add("_id", preferences.getUserId())
+                    .add("name", user.name)
+                    .add("age", user.age.toString())
+                    .add("vk", user.vk)
+                    .add("phone", user.phone)
+                    .add("avatar", user.avatar)
+                    .build()
 
             val request = Request.Builder()
                     .url(url)
@@ -128,16 +122,17 @@ class FirstEntry : AppCompatActivity() {
         }
 
         user_name.error = null
+        user_age.error = null
+        phone_input.error = null
+        vk_input.error = null
 
         var cancel = false
         var focusView: View? = null
 
         val nameStr = user_name.text.toString()
-        val userAge = if (!user_age.text.isEmpty()) {
-            user_age.text.toString().toInt()
-        } else {
-            null
-        }
+        val userAge = user_age.text.toString().toInt()
+        val phoneStr = phone_input.text.toString()
+        val vkStr = vk_input.text.toString()
         val userAvatar = toBase64(post_user_avatar)
 
         if (TextUtils.isEmpty(nameStr)) {
@@ -146,14 +141,31 @@ class FirstEntry : AppCompatActivity() {
             cancel = true
         }
 
+        if (TextUtils.isEmpty(userAge.toString())) {
+            user_age.error = "Это поле обязательно"
+            focusView = user_name
+            cancel = true
+        }
+
+        if (TextUtils.isEmpty(phoneStr)) {
+            phone_input.error = "Это поле обязательно"
+            focusView = user_name
+            cancel = true
+        }
+
+        if (TextUtils.isEmpty(vkStr)) {
+            vk_input.error = "Это поле обязательно"
+            focusView = user_name
+            cancel = true
+        }
         if (cancel) {
             focusView?.requestFocus()
         } else {
             showProgress(true)
             mUploadUserData = UploadUserData(object : SimpleCallback {
                 override fun finish(simpleResponse: SimpleResponse) {
-                    when (simpleResponse.text) {
-                        "error from insert" -> {
+                    when (simpleResponse.error) {
+                        "error to mongoose connect" -> {
                             Snackbar.make(
                                     first_entry_view,
                                     "Серверная ошибка. Попробуйте позже.",
@@ -162,11 +174,30 @@ class FirstEntry : AppCompatActivity() {
                             return
                         }
 
-                        "successful insertion" -> {
+                        "error to save" -> {
+                            /*val intent = Intent(this@FirstEntry, FeedActivity::class.java)
+
+                            startActivity(intent)
+                            return*/
+                            Snackbar.make(
+                                    first_entry_view,
+                                    "Ошибка при сохранении пользователя в БД",
+                                    Snackbar.LENGTH_SHORT
+                            ).show()
+                            return
+                        }
+
+                        "no error" -> {
                             val intent = Intent(this@FirstEntry, FeedActivity::class.java)
 
                             startActivity(intent)
                             return
+                            /*Snackbar.make(
+                                    first_entry_view,
+                                    "Успешное создание пользователя",
+                                    Snackbar.LENGTH_SHORT
+                            ).show()
+                            return*/
                         }
 
                         "network error" -> {
@@ -181,7 +212,7 @@ class FirstEntry : AppCompatActivity() {
                 }
             })
 
-            val user = User(preferences.getUserId(), nameStr, userAge, null, userAvatar)
+            val user = User(preferences.getUserId(), nameStr, userAge, vkStr, phoneStr, userAvatar, null)
             mUploadUserData!!.execute(user)
         }
     }

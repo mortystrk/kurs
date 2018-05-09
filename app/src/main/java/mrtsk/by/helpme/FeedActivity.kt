@@ -19,6 +19,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_feed.*
 import mrtsk.by.helpme.callbacks.DownloadPostsCallback
 import mrtsk.by.helpme.callbacks.UserDataCallback
+import mrtsk.by.helpme.models.Meeting
 import mrtsk.by.helpme.models.Post
 import mrtsk.by.helpme.models.PostsList
 import mrtsk.by.helpme.models.User
@@ -30,10 +31,10 @@ import okhttp3.Request
 class FeedActivity : AppCompatActivity() {
 
     private lateinit var preferences: AppPreferences
-    private var mDownloadUserData: DownloadUserData? = null
-    private var mDownloadAllPosts: DownloadAllPosts? = null
-    private lateinit var posts: PostsList
-    private lateinit var adapter: PostListViewAdapter
+    //private var mDownloadUserData: DownloadUserData? = null
+    private var mDownloadAllMeetings: DownloadAllMeetings? = null
+    private lateinit var meetings: ArrayList<Meeting>
+    private lateinit var adapter: MeetingListViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,11 +47,34 @@ class FeedActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        mDownloadUserData = DownloadUserData(object : UserDataCallback {
+        floating_home.setOnClickListener {
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+        }
+
+        mDownloadAllMeetings = DownloadAllMeetings(object : DownloadPostsCallback {
+            override fun finish(meetings: List<Meeting>?) {
+                if (meetings != null) {
+                    this@FeedActivity.meetings = ArrayList(meetings)
+                    adapter = MeetingListViewAdapter(this@FeedActivity.meetings)
+                    feed_list_view.adapter = adapter
+                } else {
+                    Snackbar.make(
+                            feed_layout,
+                            "Не удалось загрузить ленту.",
+                            Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        })
+
+        mDownloadAllMeetings!!.execute()
+
+        /*mDownloadUserData = DownloadUserData(object : UserDataCallback {
             @SuppressLint("SetTextI18n")
             override fun finish(user: User?) {
                 if (user != null) {
-                    preferences.setAvatar(user.image)
+                    preferences.setAvatar(user.avatar)
                     preferences.setUserName(user.name)
                     if (user.age != null) {
                         preferences.setAge(user.age!!)
@@ -66,7 +90,7 @@ class FeedActivity : AppCompatActivity() {
                     ).show()
                 }
 
-                mDownloadAllPosts = DownloadAllPosts(object : DownloadPostsCallback {
+                mDownloadAllMeetings = DownloadAllPosts(object : DownloadPostsCallback {
                     override fun finish(posts: List<Post>?) {
                         if (posts != null) {
                             this@FeedActivity.posts = PostsList(posts as ArrayList<Post>)
@@ -81,13 +105,13 @@ class FeedActivity : AppCompatActivity() {
                         }
                     }
                 })
-                mDownloadAllPosts!!.execute()
+                mDownloadAllMeetings!!.execute()
             }
         })
-        mDownloadUserData!!.execute()
+        mDownloadUserData!!.execute()*/
     }
 
-    override fun onResume() {
+    /*override fun onResume() {
         super.onResume()
         if (preferences.isNewPost()) {
             val newPost = Post(preferences.getPostId(), preferences.getAvatar(), preferences.getName(),
@@ -98,9 +122,9 @@ class FeedActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
             preferences.setNewPost(false)
         }
-    }
+    }*/
 
-    inner class PostListViewAdapter(private var postsList: PostsList) : BaseAdapter() {
+    inner class MeetingListViewAdapter(private var meetingsList: ArrayList<Meeting>) : BaseAdapter() {
         @SuppressLint("SetTextI18n")
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val view: View?
@@ -115,26 +139,22 @@ class FeedActivity : AppCompatActivity() {
                 viewHolder = view.tag as ViewHolder
             }
 
-            fromBase64((postsList.getPost(position)).userAvatar, viewHolder.avatar, baseContext)
-            viewHolder.userName.text = postsList.getPost(position).userName
-            viewHolder.userRating.text = "Рейтинг: ${postsList.getPost(position).postRating}"
-            viewHolder.postDescription.text = postsList.getPost(position).postDescription
-            viewHolder.postText.text = postsList.getPost(position).postText
-            viewHolder.postRating.text = "Рейтинг записи: ${postsList.getPost(position).postRating}"
+            fromBase64(meetingsList[position].creator!!.avatar, viewHolder.avatar, baseContext)
+            viewHolder.userName.text = meetingsList[position].creator!!.name
+            viewHolder.userAge.text = "Возраст: ${meetingsList[position].creator!!.age}"
+            viewHolder.meetingDescription.text = meetingsList[position].name
 
-            viewHolder.like.setOnClickListener {
-                Toast.makeText(this@FeedActivity, "Like!", Toast.LENGTH_SHORT).show()
+            viewHolder.meetingDescription.setOnClickListener {
+                val intent = Intent(this@FeedActivity, MeetingDetail::class.java)
+                intent.putExtra("_id", meetingsList[position]._id)
+
+                startActivity(intent)
             }
-
-            viewHolder.dislike.setOnClickListener {
-                Toast.makeText(this@FeedActivity, "Dislike!", Toast.LENGTH_SHORT).show()
-            }
-
             return view!!
         }
 
         override fun getItem(position: Int): Any {
-            return postsList.getPost(position)
+            return meetingsList[position]
         }
 
         override fun getItemId(position: Int): Long {
@@ -142,22 +162,18 @@ class FeedActivity : AppCompatActivity() {
         }
 
         override fun getCount(): Int {
-            return postsList.size()
+            return meetingsList.size
         }
     }
 
     private class ViewHolder(view: View?) {
         val avatar: CircleImageView = view?.findViewById<CircleImageView>(R.id.post_user_avatar) as CircleImageView
-        val userName: TextView = view?.findViewById<TextView>(R.id.post_user_name) as TextView
-        val userRating: TextView = view?.findViewById<TextView>(R.id.post_user_rating) as TextView
-        val postRating: TextView = view?.findViewById<TextView>(R.id.post_rating) as TextView
-        val postDescription: TextView = view?.findViewById<TextView>(R.id.post_description) as TextView
-        val postText: TextView = view?.findViewById<TextView>(R.id.post_text) as TextView
-        val like: CircleImageView = view?.findViewById<CircleImageView>(R.id.like) as CircleImageView
-        val dislike: CircleImageView = view?.findViewById<CircleImageView>(R.id.dislike) as CircleImageView
+        val userName: TextView = view?.findViewById<TextView>(R.id.feed_user_name) as TextView
+        val userAge: TextView = view?.findViewById<TextView>(R.id.feed_user_age) as TextView
+        val meetingDescription: TextView = view?.findViewById<TextView>(R.id.meeting_description) as TextView
     }
 
-    inner class DownloadUserData(private var userDataCallback: UserDataCallback) : AsyncTask<Unit, Unit, Unit>() {
+    /*inner class DownloadUserData(private var userDataCallback: UserDataCallback) : AsyncTask<Unit, Unit, Unit>() {
         private var user: User? = null
 
         override fun doInBackground(vararg params: Unit?) {
@@ -186,44 +202,34 @@ class FeedActivity : AppCompatActivity() {
             userDataCallback.finish(user)
         }
 
-    }
+    }*/
 
-    inner class DownloadAllPosts(private var downloadPostsCallback: DownloadPostsCallback) : AsyncTask<Unit, Unit, Unit>() {
-        private var posts: List<Post>? = null
+    inner class DownloadAllMeetings(private var downloadPostsCallback: DownloadPostsCallback) : AsyncTask<Unit, Unit, Unit>() {
+        private var meetings: List<Meeting>? = null
 
         override fun doInBackground(vararg params: Unit?) {
-            val url = "${preferences.getServerAddress()}/get/all/posts"
+            val url = "${preferences.getServerAddress()}/select/meetings"
 
             val request = Request.Builder()
                     .url(url)
                     .build()
 
-            val client = OkHttpClient()
-            val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-            val type = Types.newParameterizedType(List::class.java, Post::class.java)
-            val jsonAdapter: JsonAdapter<List<Post>> = moshi.adapter(type)
-
-            val response = client.newCall(request).execute()
-
-            jsonAdapter.fromJson(response.body().string())!!
-
-            posts = try {
+            meetings = try {
                 val client = OkHttpClient()
                 val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-                val type = Types.newParameterizedType(List::class.java, Post::class.java)
-                val jsonAdapter: JsonAdapter<List<Post>> = moshi.adapter(type)
+                val type = Types.newParameterizedType(List::class.java, Meeting::class.java)
+                val jsonAdapter: JsonAdapter<List<Meeting>> = moshi.adapter(type)
 
                 val response = client.newCall(request).execute()
 
                 jsonAdapter.fromJson(response.body().string())!!
             } catch (e: Exception) {
-
                 null
             }
         }
 
         override fun onPostExecute(result: Unit?) {
-            downloadPostsCallback.finish(posts)
+            downloadPostsCallback.finish(meetings)
         }
     }
 

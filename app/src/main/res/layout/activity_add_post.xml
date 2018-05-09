@@ -61,6 +61,15 @@
             android:clickable="true"
             app:backgroundTint="@android:color/background_light"
             app:srcCompat="@mipmap/plus" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/floatingAddPost"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="60dp"
+            app:srcCompat="@mipmap/human_avatar" />
     </RelativeLayout>
 
 

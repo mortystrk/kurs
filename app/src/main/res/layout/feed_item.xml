@@ -18,7 +18,7 @@
         app:civ_border_width="2dp" />
 
     <TextView
-        android:id="@+id/post_user_name"
+        android:id="@+id/feed_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/post_user_avatar"
@@ -29,70 +29,35 @@
         android:textColor="@android:color/black" />
 
     <TextView
-        android:id="@+id/post_user_rating"
+        android:id="@+id/feed_user_age"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/post_user_name"
+        android:layout_alignTop="@+id/feed_user_name"
         android:layout_marginStart="23dp"
-        android:layout_toEndOf="@+id/post_user_name"
+        android:layout_toEndOf="@+id/feed_user_name"
         android:text="TextView"
         android:textColor="@android:color/black" />
 
     <TextView
-        android:id="@+id/post_description"
+        android:id="@+id/meeting_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/post_user_avatar"
         android:layout_below="@+id/post_user_avatar"
-        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp"
         android:text="TextView"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/post_text"
-        android:layout_width="300dp"
-        android:layout_height="150dp"
-        android:layout_alignStart="@+id/post_description"
-        android:layout_below="@+id/post_description"
-        android:layout_marginTop="32dp"
-        android:scrollbars="vertical"
-        android:text="TextView"
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
-
-    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/like"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignEnd="@+id/post_text"
-        android:layout_alignTop="@+id/dislike"
-        android:clickable="true"
-        android:src="@mipmap/like"
-        app:civ_border_color="@color/sb__transparent"
-        app:civ_border_width="2dp" />
-
-    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/dislike"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignStart="@+id/post_user_rating"
-        android:layout_below="@+id/post_text"
-        android:layout_marginStart="37dp"
-        android:layout_marginTop="19dp"
-        android:clickable="true"
-        android:src="@mipmap/dislike"
-        app:civ_border_color="@color/sb__transparent"
-        app:civ_border_width="2dp" />
-
-    <TextView
-        android:id="@+id/post_rating"
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/post_text"
-        android:layout_alignTop="@+id/dislike"
-        android:layout_marginTop="12dp"
+        android:layout_alignStart="@+id/meeting_description"
+        android:layout_below="@+id/meeting_description"
+        android:layout_marginTop="24dp"
         android:text="TextView"
-        android:textColor="@android:color/black" />
+        android:visibility="invisible" />
+
 </RelativeLayout>
